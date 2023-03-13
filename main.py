@@ -18,7 +18,8 @@ table = sg.Table(values=rows, headings=toprow, auto_size_columns=True,
                  justification='center', key='-TABLE-', )
 
 layout = [[table],
-          [sg.Button(button_text="Find", key='-Find-')]]
+          [sg.Button(button_text="Find", key='-Find-')],
+          [sg.Button(button_text="Delete", key='-Del-')]]
 
 window = sg.Window("Table", layout, size=(780, 280), resizable=True)
 
@@ -29,5 +30,14 @@ while True:
 
     if event == '-Find-':
         func.window_find()
+
+    if event == '-Del-':
+        func.window_delete()
+        table = func.refresh_data()
+        layout = [[table],
+                  [sg.Button(button_text="Find", key='-Find-')],
+                  [sg.Button(button_text="Delete", key='-Del-')]]
+        window = sg.Window("Table", layout, size=(780, 280), resizable=True)
+        window.refresh()
 
 window.close()

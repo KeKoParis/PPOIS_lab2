@@ -62,3 +62,70 @@ def find(first_val, second_val):
             break
     if check == 0:
         sg.popup('No Data')
+
+
+def window_delete():
+    input_find = sg.Input('Name or Club or Team', enable_events=True, key='-INPUT-', expand_x=True,
+                          justification='left')
+    additional_input = sg.Input('Year or Town or Position', enable_events=True, key='-ADDIT-', expand_x=True,
+                                justification='left')
+    button_find = sg.Button(button_text="Delete", key='-Del-')
+    layout = [[input_find], [additional_input], [button_find]]
+    window = sg.Window("Delete", layout, size=(550, 90), resizable=True)
+
+    while True:
+        event, values = window.read()
+        if event == '-Del-':
+            first_val = values['-INPUT-']
+            second_val = values['-ADDIT-']
+            print(second_val)
+            delete(first_val, second_val)
+
+        if event == sg.WIN_CLOSED:
+            break
+
+
+def delete(first_val, second_val):
+    check = 0
+    data = get_data()
+    print(type(data))
+    for i in data['players']:
+        if i['name'].find(first_val) != -1 and i['year'] == second_val:
+            data['players'].remove(i)
+            check = 1
+            break
+        if i['club'] == first_val and i['town'] == second_val:
+            data['players'].remove(i)
+            check = 1
+            break
+        if i['team'] == first_val and i['position'] == second_val:
+            data['players'].remove(i)
+
+            check = 1
+            break
+    if check == 0:
+        sg.popup('No Data')
+
+    with open('data.json', 'w') as file:
+        data_json = json.dumps(data, indent=3)
+        file.write(data_json)
+        file.close()
+
+
+def refresh_data():
+    data = get_data()
+    j = 0
+    rows = []
+    for i in data['players']:
+        if j < 5:
+            rows.append(curr_player_data(i))
+        j += 1
+    toprow = ['Name', 'Year of birth', 'Football club', 'Hometown', 'Team', 'Position']
+
+    table = sg.Table(values=rows, headings=toprow, auto_size_columns=True,
+                     display_row_numbers=False,
+                     justification='center', key='-TABLE-', )
+
+    print(table)
+
+    return table
