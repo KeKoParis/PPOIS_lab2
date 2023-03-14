@@ -20,11 +20,26 @@ def next_page(curr_player):
     data = get_data()
     j = 0
     rows = []
-    if curr_player + 1 >= len(data['players']):
-        curr_player += -5
 
     for i in data['players']:
-        if curr_player < j < curr_player + 6 and j < len(data['players']):
+        if curr_player <= j < curr_player + 5 and j < len(data['players']):
+            rows.append(curr_player_data(i))
+        j += 1
+    print(rows)
+    toprow = ['Name', 'Year of birth', 'Football club', 'Hometown', 'Team', 'Position']
+    table = sg.Table(values=rows, headings=toprow, auto_size_columns=True,
+                     display_row_numbers=False,
+                     justification='center', key='-TABLE-', )
+    return table
+
+
+def prev_page(curr_player):
+    data = get_data()
+    j = 0
+    rows = []
+
+    for i in data['players']:
+        if curr_player - 1 < j < curr_player + 5 and j >= 0:
             rows.append(curr_player_data(i))
         j += 1
     print(rows)
@@ -83,7 +98,7 @@ def find(first_val, second_val):
         sg.popup('No Data')
 
 
-def window_delete():
+def delete_player():
     input_find = sg.Input('Name or Club or Team', enable_events=True, key='-INPUT-', expand_x=True,
                           justification='left')
     additional_input = sg.Input('Year or Town or Position', enable_events=True, key='-ADDIT-', expand_x=True,
@@ -144,5 +159,51 @@ def refresh_data():
                      display_row_numbers=False,
                      justification='center', key='-TABLE-', )
 
-
     return table
+
+
+def add_player():
+    name = sg.Input('name', enable_events=True, key='-name-', expand_x=True)
+    year = sg.Input('year', enable_events=True, key='-year-', expand_x=True)
+    club = sg.Input('club', enable_events=True, key='-club-', expand_x=True)
+    town = sg.Input('town', enable_events=True, key='-town-', expand_x=True)
+    team = sg.Input('team', enable_events=True, key='-team-', expand_x=True)
+    position = sg.Input('position', enable_events=True, key='-position-', expand_x=True)
+
+    layout = [[name], [year], [club], [town], [team], [position], [sg.Button(button_text="Add", key='-Add-')]]
+
+    window = sg.Window("Add", layout, size=(500, 210), resizable=True)
+
+    while True:
+        event, values = window.read()
+
+        if event == '-Add-':
+            new_player = dict(name=values['-name-'],
+                              year=values['-year-'],
+                              club=values['-club-'],
+                              town=values['-town-'],
+                              team=values['-team-'],
+                              position=values['-position-'])
+            data = get_data()
+            data['players'].append(new_player)
+            print(data)
+            with open('data.json', 'w') as file:
+                data_json = json.dumps(data, indent=3)
+                file.write(data_json)
+                file.close()
+
+        if event == sg.WIN_CLOSED:
+            break
+
+
+def update_layout(table):
+    layout = [[table],
+              [sg.Button(key='Bback', image_filename="arrows/doubleL.png"),
+               sg.Button(key='back', image_filename="arrows/left.png"),
+               sg.Button(key='next', image_filename="arrows/right.png"),
+               sg.Button(key='Nnext', image_filename="arrows/doubleR.png")],
+              [sg.Button(button_text="Find", key='-Find-'),
+               sg.Button(button_text="Delete", key='-Del-')],
+              [sg.Button(button_text="Add player", key='ADD')]]
+
+    return layout
