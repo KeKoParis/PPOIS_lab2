@@ -16,6 +16,25 @@ def get_data():
     return data
 
 
+def next_page(curr_player):
+    data = get_data()
+    j = 0
+    rows = []
+    if curr_player + 1 >= len(data['players']):
+        curr_player += -5
+
+    for i in data['players']:
+        if curr_player < j < curr_player + 6 and j < len(data['players']):
+            rows.append(curr_player_data(i))
+        j += 1
+    print(rows)
+    toprow = ['Name', 'Year of birth', 'Football club', 'Hometown', 'Team', 'Position']
+    table = sg.Table(values=rows, headings=toprow, auto_size_columns=True,
+                     display_row_numbers=False,
+                     justification='center', key='-TABLE-', )
+    return table
+
+
 def window_find():
     input_find = sg.Input('Name or Club or Team', enable_events=True, key='-INPUT-', expand_x=True,
                           justification='left')
@@ -88,7 +107,6 @@ def window_delete():
 def delete(first_val, second_val):
     check = 0
     data = get_data()
-    print(type(data))
     for i in data['players']:
         if i['name'].find(first_val) != -1 and i['year'] == second_val:
             data['players'].remove(i)
@@ -126,6 +144,5 @@ def refresh_data():
                      display_row_numbers=False,
                      justification='center', key='-TABLE-', )
 
-    print(table)
 
     return table
