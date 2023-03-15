@@ -1,5 +1,5 @@
 import PySimpleGUI as sg
-
+import windows as wind
 import functions as func
 
 toprow = ['Name', 'Year of birth', 'Football club', 'Hometown', 'Team', 'Position']
@@ -18,7 +18,7 @@ table = sg.Table(values=rows, headings=toprow, auto_size_columns=True,
                  justification='center', key='-TABLE-', )
 img = sg.Image(size=(15, 15), filename="arrows/right.png")
 
-window = sg.Window("Table", func.update_layout(table), size=(780, 280), resizable=True)
+window = sg.Window("Table", wind.update_layout(table), size=(780, 280), resizable=True)
 curr_player = 0
 while True:
     event, values = window.read()
@@ -26,16 +26,16 @@ while True:
         break
 
     if event == '-Find-':
-        func.window_find()
+        wind.window_find()
 
     if event == '-Del-':
-        func.delete_player()
+        wind.delete_player()
         curr_player += -5
         if curr_player < 0:
             curr_player += 5
         data = func.get_data()
         table = func.next_page(curr_player)
-        new_window = sg.Window("Table", func.update_layout(table), size=(780, 280), resizable=True)
+        new_window = sg.Window("Table", wind.update_layout(table), size=(780, 280), resizable=True)
         window.close()
         window = new_window
 
@@ -44,7 +44,7 @@ while True:
         if curr_player > len(data['players']):
             curr_player += -5
         table = func.next_page(curr_player)
-        new_window = sg.Window("Table", func.update_layout(table), size=(780, 280), resizable=True)
+        new_window = sg.Window("Table", wind.update_layout(table), size=(780, 280), resizable=True)
         window.close()
         window = new_window
 
@@ -54,14 +54,14 @@ while True:
             curr_player += 5
         table = func.prev_page(curr_player)
 
-        new_window = sg.Window("Table", func.update_layout(table), size=(780, 280), resizable=True)
+        new_window = sg.Window("Table", wind.update_layout(table), size=(780, 280), resizable=True)
         window.close()
         window = new_window
 
     if event == "Bback":
         curr_player = 0
         table = func.prev_page(curr_player)
-        new_window = sg.Window("Table", func.update_layout(table), size=(780, 280), resizable=True)
+        new_window = sg.Window("Table", wind.update_layout(table), size=(780, 280), resizable=True)
         window.close()
         window = new_window
 
@@ -72,18 +72,18 @@ while True:
             curr_player += 5
         curr_player += -5
         table = func.prev_page(curr_player)
-        new_window = sg.Window("Table", func.update_layout(table), size=(780, 280), resizable=True)
+        new_window = sg.Window("Table", wind.update_layout(table), size=(780, 280), resizable=True)
         window.close()
         window = new_window
 
     if event == 'ADD':
-        func.add_player()
+        wind.add_player()
         curr_player += -5
         if curr_player < 0:
             curr_player += 5
         data = func.get_data()
         table = func.next_page(curr_player)
-        new_window = sg.Window("Table", func.update_layout(table), size=(780, 280), resizable=True)
+        new_window = sg.Window("Table", wind.update_layout(table), size=(780, 280), resizable=True)
         window.close()
         window = new_window
 
