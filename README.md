@@ -1,5 +1,5 @@
 <p>
-This program is a table. User is able to look through the data, delete player by options,
+This program is a table. The user is able to look through the data, delete player by options,
 find player by options, add player.
 </p>
 
