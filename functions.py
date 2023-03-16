@@ -1,5 +1,6 @@
 import PySimpleGUI as sg
-import json
+
+import players
 
 
 def curr_player_data(data):
@@ -9,15 +10,9 @@ def curr_player_data(data):
     return player
 
 
-def get_data():
-    with open("data.json") as file:
-        data = json.load(file)
-        file.close()
-    return data
-
-
 def next_page(curr_player):
-    data = get_data()
+    data_model = players.DataPlayers()
+    data = data_model.get_data()
     j = 0
     rows = []
 
@@ -34,7 +29,8 @@ def next_page(curr_player):
 
 
 def prev_page(curr_player):
-    data = get_data()
+    data_model = players.DataPlayers()
+    data = data_model.get_data()
     j = 0
     rows = []
 
@@ -53,7 +49,8 @@ def prev_page(curr_player):
 def find(first_val, second_val):
     player_data = ""
     check = 0
-    data = get_data()
+    data_model = players.DataPlayers()
+    data = data_model.get_data()
     for i in data['players']:
         if i['name'].find(first_val) != -1 and i['year'] == second_val:
             player_data += i['name'] + " " + i['year'] + " " + i['club'] + " " + i['town'] + " " + \
@@ -79,7 +76,8 @@ def find(first_val, second_val):
 
 def delete(first_val, second_val):
     check = 0
-    data = get_data()
+    data_model = players.DataPlayers()
+    data = data_model.get_data()
     for i in data['players']:
         if i['name'].find(first_val) != -1 and i['year'] == second_val:
             data['players'].remove(i)
@@ -99,14 +97,13 @@ def delete(first_val, second_val):
     if check == 0:
         sg.popup('No Data')
 
-    with open('data.json', 'w') as file:
-        data_json = json.dumps(data, indent=3)
-        file.write(data_json)
-        file.close()
+    data_model.refresh_data(data)
+    data_model.push_data()
 
 
 def refresh_data():
-    data = get_data()
+    data_model = players.DataPlayers()
+    data = data_model.get_data()
     j = 0
     rows = []
     for i in data['players']:

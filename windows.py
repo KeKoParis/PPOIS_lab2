@@ -1,6 +1,7 @@
 import PySimpleGUI as sg
-import json
+
 import functions as func
+import players
 
 
 def window_find():
@@ -21,7 +22,7 @@ def window_find():
             func.find(first_val, second_val)
 
         if event == sg.WIN_CLOSED:
-            break
+            return False
 
 
 def delete_player():
@@ -67,13 +68,13 @@ def add_player():
                               town=values['-town-'],
                               team=values['-team-'],
                               position=values['-position-'])
-            data = func.get_data()
+            data_model = players.DataPlayers()
+            data = data_model.get_data()
+
             data['players'].append(new_player)
             print(data)
-            with open('data.json', 'w') as file:
-                data_json = json.dumps(data, indent=3)
-                file.write(data_json)
-                file.close()
+            data_model.refresh_data(data)
+            data_model.push_data()
 
         if event == sg.WIN_CLOSED:
             break
